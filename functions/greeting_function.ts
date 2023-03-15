@@ -71,7 +71,7 @@ export default SlackFunction(GreetingFunctionDefinition, async ({ inputs, token 
 
   return {
     outputs: {
-      greeting: `Given these ten emojis, create as meaningful a sentence as possible. The more emojis a sentence consists, the more points it gets.\n\n${greeting}`,
+      greeting: `Get your emoji on! ${greeting}\n\nCreate a meaningful sentence. The more emojis and meaningful your sentence is, the more points it gets. Check the rules and point metrics in the channel description.\n\nThe game will end in ${duration} minutes.`,
     },
   };
 });

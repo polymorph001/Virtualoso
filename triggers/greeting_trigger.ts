@@ -1,5 +1,5 @@
-import { Trigger } from "deno-slack-api/types.ts";
-import GreetingWorkflow from "../workflows/greeting_workflow.ts";
+import { Trigger } from 'deno-slack-api/types.ts';
+import GreetingWorkflow from '../workflows/greeting_workflow.ts';
 
 /**
  * Triggers determine when workflows are executed. A trigger
@@ -8,16 +8,16 @@ import GreetingWorkflow from "../workflows/greeting_workflow.ts";
  * https://api.slack.com/future/triggers
  */
 const greetingTrigger: Trigger<typeof GreetingWorkflow.definition> = {
-  type: "shortcut",
-  name: "Send a greeting",
-  description: "Send greeting to channel",
-  workflow: "#/workflows/greeting_workflow",
+  type: 'shortcut',
+  name: 'Polymoji',
+  description: 'Click on the button “start” and an emoji pack of 10 emojis gets drawn.',
+  workflow: '#/workflows/greeting_workflow',
   inputs: {
     interactivity: {
-      value: "{{data.interactivity}}",
+      value: '{{data.interactivity}}',
     },
     channel: {
-      value: "{{data.channel_id}}",
+      value: '{{data.channel_id}}',
     },
   },
 };

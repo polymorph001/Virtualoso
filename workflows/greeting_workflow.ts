@@ -29,14 +29,14 @@ const GreetingWorkflow = DefineWorkflow({
  * https://api.slack.com/future/functions#open-a-form
  */
 const inputForm = GreetingWorkflow.addStep(Schema.slack.functions.OpenForm, {
-  title: 'Send a greeting',
+  title: 'Start the game',
   interactivity: GreetingWorkflow.inputs.interactivity,
-  submit_label: 'Send greeting',
+  submit_label: 'Start',
   fields: {
     elements: [
       {
         name: 'channel',
-        title: 'Channel to send message to',
+        title: 'In which channel do you want to start a game?',
         type: Schema.slack.types.channel_id,
         default: GreetingWorkflow.inputs.channel,
       },

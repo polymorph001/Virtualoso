@@ -32,10 +32,17 @@ export const EndGameFunctionDefinition = DefineFunction({
 
 export default SlackFunction(EndGameFunctionDefinition, async ({ inputs, token }) => {
   const { channel_id } = inputs;
-  console.log('djb executing message to channel', channel_id);
+  const gifs = [
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGQ2ZTNmM2U4ODI4OGVmYzQyMTg2OTdmNWJlNTI5YzFjMzcxYzY3NSZjdD10cw/XmpKkhzRoP4NSnFtA9/giphy.gif',
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExODYzMDAxMWNhODUxNzc3Mzg2M2Y2NmVjZDU0NDIxZDkxNjU1MzM0MyZjdD1z/Jgn076XZ7K0c4edY6J/giphy.gif',
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGFiMTExNzhiMjIxYTdiNDE2ZGZlYmIxY2QwY2NmNTEzYTFlNTk2NyZjdD1z/ZbkOKvirE4t5pDEUpP/giphy.gif',
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOTRlZDE0MmQ3ODMzZDRhYjI4MDVmMTJiNDA1MzNjZjY0OTc0NzZkOSZjdD10cw/IafVFKLDvPApR6NAXa/giphy.gif',
+  ];
+
+  const gif = gifs[Math.floor(Math.random() * gifs.length)];
   return {
     outputs: {
-      message: `These are your winners:`,
+      message: `The game has ended! Please submit your answers now.\n\n${gif}`,
     },
   };
 });
