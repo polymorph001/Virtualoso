@@ -40,12 +40,20 @@ const inputForm = GreetingWorkflow.addStep(Schema.slack.functions.OpenForm, {
         type: Schema.slack.types.channel_id,
         default: GreetingWorkflow.inputs.channel,
       },
+      {
+        name: 'duration',
+        title: 'How long should the game run for, in minutes',
+        type: Schema.types.integer,
+      },
     ],
-    required: ['channel'],
+    required: ['channel', 'duration'],
   },
 });
 
-const greetingFunctionStep = GreetingWorkflow.addStep(GreetingFunctionDefinition, {});
+const greetingFunctionStep = GreetingWorkflow.addStep(GreetingFunctionDefinition, {
+  channel_id: inputForm.outputs.fields.channel,
+  duration: inputForm.outputs.fields.duration,
+});
 
 GreetingWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: inputForm.outputs.fields.channel,

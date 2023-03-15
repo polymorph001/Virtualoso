@@ -1,6 +1,7 @@
 import { SlackAPI } from 'deno-slack-api/mod.ts';
 import { DefineFunction, Schema, SlackFunction } from 'deno-slack-sdk/mod.ts';
 import emoji from '../assets/emoji.ts';
+import EndGameWorkflow from '../workflows/end_game_workflow.ts';
 
 /**
  * Functions are reusable building blocks of automation that accept
@@ -13,6 +14,18 @@ export const GreetingFunctionDefinition = DefineFunction({
   title: 'Generate a greeting',
   description: 'Generate a greeting',
   source_file: 'functions/greeting_function.ts',
+  input_parameters: {
+    properties: {
+      duration: {
+        type: Schema.types.integer,
+        description: 'How long should the game run for, in minutes',
+      },
+      channel_id: {
+        type: Schema.slack.types.channel_id,
+        description: 'Destination channel',
+      },
+    },
+  },
   output_parameters: {
     properties: {
       greeting: {
@@ -24,8 +37,9 @@ export const GreetingFunctionDefinition = DefineFunction({
   },
 });
 
-export default SlackFunction(GreetingFunctionDefinition, async ({ token }) => {
-  // TODO: generate emoji prompt here
+export default SlackFunction(GreetingFunctionDefinition, async ({ inputs, token }) => {
+  const { channel_id, duration } = inputs;
+
   const client = SlackAPI(token);
   const res = await client.apiCall('emoji.list');
   const customEmoji = Object.keys(res?.emoji);
@@ -34,6 +48,26 @@ export default SlackFunction(GreetingFunctionDefinition, async ({ token }) => {
   const greeting = Array.from(Array(10).keys())
     .map(() => `:${allEmoji[Math.floor(Math.random() * allEmoji.length)]}:`)
     .join('');
+
+  const now = new Date();
+  now.setMinutes(now.getMinutes() + duration);
+
+  // Schedule the job to end
+  await client.workflows.triggers.create<typeof EndGameWorkflow.definition>({
+    name: 'Example',
+    type: 'scheduled',
+    workflow: `#/workflows/${EndGameWorkflow.definition.callback_id}`,
+    inputs: {
+      channel_id: { value: channel_id },
+    },
+    schedule: {
+      start_time: now.toISOString(),
+      timezone: 'UTC',
+      frequency: {
+        type: 'once',
+      },
+    },
+  });
 
   return {
     outputs: {
