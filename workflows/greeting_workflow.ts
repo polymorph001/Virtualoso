@@ -1,5 +1,5 @@
-import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
-import { GreetingFunctionDefinition } from "../functions/greeting_function.ts";
+import { DefineWorkflow, Schema } from 'deno-slack-sdk/mod.ts';
+import { GreetingFunctionDefinition } from '../functions/greeting_function.ts';
 
 /**
  * A workflow is a set of steps that are executed in order.
@@ -7,9 +7,9 @@ import { GreetingFunctionDefinition } from "../functions/greeting_function.ts";
  * https://api.slack.com/future/workflows
  */
 const GreetingWorkflow = DefineWorkflow({
-  callback_id: "greeting_workflow",
-  title: "Send a greeting",
-  description: "Send a greeting to channel",
+  callback_id: 'greeting_workflow',
+  title: 'Send a greeting',
+  description: 'Send a greeting to channel',
   input_parameters: {
     properties: {
       interactivity: {
@@ -19,7 +19,7 @@ const GreetingWorkflow = DefineWorkflow({
         type: Schema.slack.types.channel_id,
       },
     },
-    required: ["interactivity"],
+    required: ['interactivity'],
   },
 });
 
@@ -28,27 +28,24 @@ const GreetingWorkflow = DefineWorkflow({
  * built-in OpenForm function as a first step.
  * https://api.slack.com/future/functions#open-a-form
  */
-const inputForm = GreetingWorkflow.addStep(
-  Schema.slack.functions.OpenForm,
-  {
-    title: "Send a greeting",
-    interactivity: GreetingWorkflow.inputs.interactivity,
-    submit_label: "Send greeting",
-    fields: {
-      elements: [{
-        name: "channel",
-        title: "Channel to send message to",
+const inputForm = GreetingWorkflow.addStep(Schema.slack.functions.OpenForm, {
+  title: 'Send a greeting',
+  interactivity: GreetingWorkflow.inputs.interactivity,
+  submit_label: 'Send greeting',
+  fields: {
+    elements: [
+      {
+        name: 'channel',
+        title: 'Channel to send message to',
         type: Schema.slack.types.channel_id,
         default: GreetingWorkflow.inputs.channel,
-      }],
-      required: ["channel"],
-    },
+      },
+    ],
+    required: ['channel'],
   },
-);
+});
 
-const greetingFunctionStep = GreetingWorkflow.addStep(
-  GreetingFunctionDefinition
-);
+const greetingFunctionStep = GreetingWorkflow.addStep(GreetingFunctionDefinition, {});
 
 GreetingWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: inputForm.outputs.fields.channel,
