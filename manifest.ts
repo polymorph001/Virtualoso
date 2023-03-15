@@ -1,5 +1,7 @@
 import { Manifest } from 'deno-slack-sdk/mod.ts';
 import GreetingWorkflow from './workflows/greeting_workflow.ts';
+import GameDatastore from './datastores/game_data.ts';
+import { GameStatsType } from './types/game_stats.ts';
 
 /**
  * The app manifest contains the app's configuration. This
@@ -12,5 +14,7 @@ export default Manifest({
   icon: 'assets/default_new_app_icon.png',
   workflows: [GreetingWorkflow],
   outgoingDomains: [],
-  botScopes: ['commands', 'chat:write', 'chat:write.public', 'emoji:read'],
+  datastores: [GameDatastore],
+  types: [GameStatsType],
+  botScopes: ['commands', 'chat:write', 'chat:write.public', 'emoji:read', 'datastore:read', 'datastore:write'],
 });
